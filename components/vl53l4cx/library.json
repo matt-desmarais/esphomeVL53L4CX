@@ -1,0 +1,14 @@
+{
+  "name": "VL53L4CXSensor",
+  "version": "1.0.0",
+  "description": "VL53L4CX ToF Sensor for ESPHome",
+  "authors": [
+    {
+      "name": "Matt Desmarais"
+    }
+  ],
+  "dependencies": {
+    "esphome": "*",
+    "stm32duino/VL53L4CX": "^1.2.0"  // Add dependency for STM32Duino VL53L4CX
+  }
+}
