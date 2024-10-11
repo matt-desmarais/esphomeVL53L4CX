@@ -1,47 +1,72 @@
 #include "vl53l4cx.h"
-#include "esphome/core/log.h"
-#include "esphome/components/i2c/i2c.h"
 
 namespace esphome {
 namespace vl53l4cx {
 
-static const char *TAG = "vl53l4cx.sensor";
-
 void VL53L4CXSensor::setup() {
-  ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
+  Wire.begin();
+  delay(500);
 
-  // Initialize I2C communication with the sensor
-  if (!this->is_i2c_initialized()) {
-    ESP_LOGE(TAG, "I2C bus not initialized.");
-    this->mark_failed();
+  Wire.beginTransmission(0x29);  // Assuming sensor address is 0x29
+  uint8_t error = Wire.endTransmission();
+  
+  if (error != 0) {
+    ESP_LOGE("VL53L4CX", "I2C communication failed! Error code: %d", error);
     return;
   }
 
-  // Initialize the VL53L4CX sensor
-  if (!this->vl53l4cx_.begin()) {
-    ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
-    this->mark_failed();
+  if (sensor.VL53L4CX_DataInit() != 0) {
+    ESP_LOGE("VL53L4CX", "Sensor initialization failed!");
     return;
   }
+
+  if (sensor.VL53L4CX_SetTuningParameter(1, 50) != 0) {
+    ESP_LOGE("VL53L4CX", "Failed to set tuning parameter.");
+    return;
+  }
+
+  if (sensor.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG) != 0) {
+    ESP_LOGE("VL53L4CX", "Failed to set distance mode.");
+    return;
+  }
+
+  if (sensor.VL53L4CX_StartMeasurement() != 0) {
+    ESP_LOGE("VL53L4CX", "Failed to start measurement.");
+    return;
+  }
+
+  ESP_LOGI("VL53L4CX", "Sensor setup completed successfully.");
 }
 
 void VL53L4CXSensor::update() {
-  ESP_LOGD(TAG, "Updating VL53L4CX sensor...");
+  uint16_t distance = get_distance();
 
-  // Get distance measurement
-  uint16_t distance = this->vl53l4cx_.readRange();
-
-  if (this->vl53l4cx_.timeoutOccurred()) {
-    ESP_LOGW(TAG, "VL53L4CX sensor timeout occurred!");
-    this->mark_failed();
-    return;
+  if (distance > 0) {
+    publish_state(distance);
+  } else {
+    ESP_LOGE("VL53L4CX", "Invalid measurement, publishing NAN");
+    publish_state(NAN);
   }
+}
 
-  // Log distance
-  ESP_LOGD(TAG, "Measured distance: %u mm", distance);
+uint16_t VL53L4CXSensor::get_distance() {
+  VL53L4CX_MultiRangingData_t ranging_data;
+  sensor.VL53L4CX_GetMultiRangingData(&ranging_data);
 
-  // Publish distance to ESPHome
-  this->publish_state(distance);
+  if (ranging_data.NumberOfObjectsFound > 0) {
+    uint16_t min_distance = ranging_data.RangeData[0].RangeMilliMeter;
+
+    for (int i = 1; i < ranging_data.NumberOfObjectsFound; i++) {
+      uint16_t current_distance = ranging_data.RangeData[i].RangeMilliMeter;
+      if (current_distance < min_distance) {
+        min_distance = current_distance;
+      }
+    }
+
+    return min_distance;
+  } else {
+    return 0;
+  }
 }
 
 }  // namespace vl53l4cx
