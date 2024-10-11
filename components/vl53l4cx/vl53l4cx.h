@@ -13,7 +13,7 @@ class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2
   void update() override;
 
  protected:
-  Adafruit_VL53L4CX vl53l4cx_;  // Use the Adafruit library for the VL53L4CX sensor
+  VL53L4CX vl53l4cx_;  // Use the Adafruit library for the VL53L4CX sensor
 };
 
 }  // namespace vl53l4cx
