@@ -10,7 +10,7 @@ VL53L4CXSensor = vl53l4cx_ns.class_('VL53L4CXSensor', sensor.Sensor, cg.PollingC
 # Configuration schema for the component
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(VL53L4CXSensor),
-}).extend(sensor.SENSOR_SCHEMA).extend(i2c.I2C_DEVICE_SCHEMA)
+}).extend(sensor.SENSOR_SCHEMA).extend(i2c.i2c_device_schema(0x29))
 
 # Define the setup for the sensor component
 async def to_code(config):
