@@ -4,17 +4,11 @@ namespace esphome {
 namespace vl53l4cx {
 
 void VL53L4CXSensor::setup() {
-  Wire.begin();
-  delay(500);
+  // Set I2C address and bus
+  this->set_i2c_address(0x29);
+  this->set_i2c_bus(i2c_arduinoi2cbus_id);  // Replace with the actual bus ID if needed
 
-  Wire.beginTransmission(0x29);  // Assuming sensor address is 0x29
-  uint8_t error = Wire.endTransmission();
-  
-  if (error != 0) {
-    ESP_LOGE("VL53L4CX", "I2C communication failed! Error code: %d", error);
-    return;
-  }
-
+  // Sensor initialization logic
   if (sensor.VL53L4CX_DataInit() != 0) {
     ESP_LOGE("VL53L4CX", "Sensor initialization failed!");
     return;
