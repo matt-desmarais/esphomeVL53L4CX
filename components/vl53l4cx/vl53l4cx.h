@@ -2,7 +2,7 @@
 
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/i2c/i2c.h"
-#include "Adafruit_VL53L4CX.h"
+#include "vl53l4cx_class.h"
 
 namespace esphome {
 namespace vl53l4cx {
