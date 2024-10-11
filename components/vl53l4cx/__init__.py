@@ -15,7 +15,7 @@ CONFIG_SCHEMA = sensor.sensor_schema().extend({
     cv.Optional(CONF_UNIT_OF_MEASUREMENT, default=UNIT_MILLIMETER): cv.string,
     cv.Optional(CONF_ICON, default=ICON_RULER): cv.icon,
     cv.Optional(CONF_ACCURACY_DECIMALS, default=0): cv.int_,
-}).extend(cv.polling_component_schema('60s')).extend(i2c.i2c_device_schema())
+}).extend(cv.polling_component_schema('60s')).extend(i2c.i2c_device_schema(0x29))
 
 # Define the setup for the sensor component
 async def to_code(config):
