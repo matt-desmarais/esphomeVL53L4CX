@@ -11,27 +11,31 @@ void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
 
   // Initialize I2C communication with the sensor
-  if (!this->wire_->begin()) {
-    ESP_LOGE(TAG, "Could not initialize I2C.");
+  if (!this->is_i2c_initialized()) {
+    ESP_LOGE(TAG, "I2C bus not initialized.");
     this->mark_failed();
     return;
   }
 
   // Initialize the VL53L4CX sensor
-  if (this->vl53l4cx_.init() != 0) {
+  if (!this->vl53l4cx_.begin()) {
     ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
     this->mark_failed();
     return;
   }
-
-  this->vl53l4cx_.setAddress(0x29); // Default I2C address
 }
 
 void VL53L4CXSensor::update() {
   ESP_LOGD(TAG, "Updating VL53L4CX sensor...");
 
   // Get distance measurement
-  uint16_t distance = this->vl53l4cx_.readRangeContinuousMillimeters();
+  uint16_t distance = this->vl53l4cx_.readRange();
+
+  if (this->vl53l4cx_.timeoutOccurred()) {
+    ESP_LOGW(TAG, "VL53L4CX sensor timeout occurred!");
+    this->mark_failed();
+    return;
+  }
 
   // Log distance
   ESP_LOGD(TAG, "Measured distance: %u mm", distance);
