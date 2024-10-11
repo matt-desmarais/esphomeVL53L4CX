@@ -10,12 +10,13 @@ namespace vl53l4cx {
 class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2c::I2CDevice {
  public:
   VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
+
   //VL53L4CXSensor() {}  // Constructor without setting I2C manually
   void setup() override;
   void update() override;
 
  protected:
-  VL53L4CX vl53l4cx_;  // Use the Adafruit library for the VL53L4CX sensor
+  VL53L4CX vl53l4cx_ = new VL53L4CXComponent(update_interval);
   uint16_t get_distance();
 };
 
