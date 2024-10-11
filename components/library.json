@@ -1,5 +1,5 @@
 {
-  "name": "VL53L4CXSensor",
+  "name": "vl53l4cx",
   "version": "1.0.0",
   "description": "VL53L4CX ToF Sensor for ESPHome",
   "authors": [
