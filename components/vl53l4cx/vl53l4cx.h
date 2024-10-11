@@ -1,5 +1,6 @@
 #pragma once
 
+#include "esphome/components/i2c/i2c.h"
 #include "esphome/core/component.h"
 #include "esphome/components/sensor/sensor.h"
 #include "vl53l4cx_class.h"  // Include STM32Duino VL53L4CX library
