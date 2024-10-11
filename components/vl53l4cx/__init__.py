@@ -15,14 +15,11 @@ CONFIG_SCHEMA = sensor.sensor_schema().extend({
     cv.Optional(CONF_UNIT_OF_MEASUREMENT, default=UNIT_MILLIMETER): cv.string,
     cv.Optional(CONF_ICON, default=ICON_RULER): cv.icon,
     cv.Optional(CONF_ACCURACY_DECIMALS, default=0): cv.int_,
-}).extend(cv.polling_component_schema('60s')).extend(i2c.I2C_DEVICE_SCHEMA)
+}).extend(cv.polling_component_schema('60s')).extend(i2c.i2c_device_schema())
 
 # Define the setup for the sensor component
 async def to_code(config):
-    # Declare the sensor component
     var = cg.new_Pvariable(config[CONF_ID])
-
-    # Set up the sensor properties
     await cg.register_component(var, config)
     await sensor.register_sensor(var, config)
     await i2c.register_i2c_device(var, config)
