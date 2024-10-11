@@ -35,7 +35,7 @@ void VL53L4CXSensor::update() {
 
 uint16_t VL53L4CXSensor::get_distance() {
   VL53L4CX_MultiRangingData_t ranging_data;
-  sensor.VL53L4CX_GetMultiRangingData(&ranging_data);
+  vl53l4cx_.VL53L4CX_GetMultiRangingData(&ranging_data);
 
   if (ranging_data.NumberOfObjectsFound > 0) {
     uint16_t min_distance = ranging_data.RangeData[0].RangeMilliMeter;
