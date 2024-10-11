@@ -9,6 +9,7 @@ namespace vl53l4cx {
 
 class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2c::I2CDevice {
  public:
+  VL53L4CXSensor() {}  // Constructor without setting I2C manually
   void setup() override;
   void update() override;
 
