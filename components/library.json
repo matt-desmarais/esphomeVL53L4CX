@@ -9,6 +9,6 @@
   ],
   "dependencies": {
     "esphome": "*",
-    "stm32duino/VL53L4CX": "^1.2.0"  // Add dependency for STM32Duino VL53L4CX
+    "stm32duino/VL53L4CX": "^1.1.0"  // Add dependency for STM32Duino VL53L4CX
   }
 }
