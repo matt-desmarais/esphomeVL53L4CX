@@ -11,8 +11,8 @@ void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
 
   // Set the I2C bus for the sensor using the methods from i2c::I2CDevice
-  this->set_i2c_bus(i2c_arduinoi2cbus_id);  // Or the correct I2C bus ID
-  this->set_i2c_address(0x29);  // Set the I2C address for VL53L4CX sensor
+//  this->set_i2c_bus(i2c_arduinoi2cbus_id);  // Or the correct I2C bus ID
+//  this->set_i2c_address(0x29);  // Set the I2C address for VL53L4CX sensor
 
   // Initialize the VL53L4CX sensor over I2C
   if (!this->vl53l4cx_.begin()) {
