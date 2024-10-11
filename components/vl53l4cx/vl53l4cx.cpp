@@ -10,7 +10,7 @@ void VL53L4CXSensor::setup() {
   ESP_LOGI("VL53L4CX", "Initializing VL53L4CX sensor...");
 
   // Initialize the sensor using I2C
-  if (this->VL53L4CX_DataInit() != 0) {
+  if (this->vl53l4cx.VL53L4CX_DataInit() != 0) {
     ESP_LOGE("VL53L4CX", "Sensor initialization failed!");
     return;
   }
