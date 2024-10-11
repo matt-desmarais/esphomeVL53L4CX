@@ -6,7 +6,7 @@ namespace vl53l4cx {
 void VL53L4CXSensor::setup() {
   // Set I2C address and bus
   this->set_i2c_address(0x29);
-  this->set_i2c_bus(i2c_arduinoi2cbus_id);  // Replace with the actual bus ID if needed
+//  this->set_i2c_bus(i2c_arduinoi2cbus_id);  // Replace with the actual bus ID if needed
 
   // Sensor initialization logic
   if (sensor.VL53L4CX_DataInit() != 0) {
