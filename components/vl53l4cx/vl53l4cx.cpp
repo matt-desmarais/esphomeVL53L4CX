@@ -10,25 +10,25 @@ void VL53L4CXSensor::setup() {
   ESP_LOGI("VL53L4CX", "Initializing VL53L4CX sensor...");
 
   // Initialize the sensor using I2C
-  if (this->vl53l4cx.VL53L4CX_DataInit() != 0) {
+  if (this->sensor.VL53L4CX_DataInit() != 0) {
     ESP_LOGE("VL53L4CX", "Sensor initialization failed!");
     return;
   }
 
   // Set tuning parameter
-  if (this->vl53l4cx.VL53L4CX_SetTuningParameter(1, 50) != 0) {
+  if (this->sensor.VL53L4CX_SetTuningParameter(1, 50) != 0) {
     ESP_LOGE("VL53L4CX", "Failed to set tuning parameter.");
     return;
   }
 
   // Set distance mode to long range
-  if (this->vl53l4cx.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG) != 0) {
+  if (this->sensor.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG) != 0) {
     ESP_LOGE("VL53L4CX", "Failed to set distance mode.");
     return;
   }
 
   // Start the sensor measurement
-  if (this->vl53l4cx.VL53L4CX_StartMeasurement() != 0) {
+  if (this->sensor.VL53L4CX_StartMeasurement() != 0) {
     ESP_LOGE("VL53L4CX", "Failed to start measurement.");
     return;
   }
