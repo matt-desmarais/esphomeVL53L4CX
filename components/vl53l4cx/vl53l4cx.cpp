@@ -16,19 +16,19 @@ void VL53L4CXSensor::setup() {
   }
 
   // Set tuning parameter
-  if (this->VL53L4CX_SetTuningParameter(1, 50) != 0) {
+  if (this->vl53l4cx.VL53L4CX_SetTuningParameter(1, 50) != 0) {
     ESP_LOGE("VL53L4CX", "Failed to set tuning parameter.");
     return;
   }
 
   // Set distance mode to long range
-  if (this->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG) != 0) {
+  if (this->vl53l4cx.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG) != 0) {
     ESP_LOGE("VL53L4CX", "Failed to set distance mode.");
     return;
   }
 
   // Start the sensor measurement
-  if (this->VL53L4CX_StartMeasurement() != 0) {
+  if (this->vl53l4cx.VL53L4CX_StartMeasurement() != 0) {
     ESP_LOGE("VL53L4CX", "Failed to start measurement.");
     return;
   }
@@ -53,7 +53,7 @@ uint16_t VL53L4CXSensor::get_distance() {
   VL53L4CX_MultiRangingData_t ranging_data;
 
   // Use the sensor's API to get ranging data
-  if (this->VL53L4CX_GetMultiRangingData(&ranging_data) == 0) {
+  if (this->vl53l4cx.VL53L4CX_GetMultiRangingData(&ranging_data) == 0) {
     if (ranging_data.NumberOfObjectsFound > 0) {
       uint16_t min_distance = ranging_data.RangeData[0].RangeMilliMeter;
 
