@@ -23,17 +23,34 @@ void VL53L4CXSensor::setup() {
 }
 
 void VL53L4CXSensor::update() {
-  ESP_LOGD(TAG, "Updating VL53L4CX sensor...");
+  uint16_t distance = get_distance();
 
-  // Get distance measurement
-  VL53L4CX_RangingData_t measure;
-  this->vl53l4cx_.getRangingData(&measure);
+  if (distance > 0) {
+    publish_state(distance);
+  } else {
+    ESP_LOGE("VL53L4CX", "Invalid measurement, publishing NAN");
+    publish_state(NAN);
+  }
+}
 
-  // Log the distance
-  ESP_LOGD(TAG, "Measured distance: %u mm", measure.RangeMilliMeter);
+uint16_t VL53L4CXSensor::get_distance() {
+  VL53L4CX_MultiRangingData_t ranging_data;
+  sensor.VL53L4CX_GetMultiRangingData(&ranging_data);
 
-  // Publish the measured distance to ESPHome
-  this->publish_state(measure.RangeMilliMeter);
+  if (ranging_data.NumberOfObjectsFound > 0) {
+    uint16_t min_distance = ranging_data.RangeData[0].RangeMilliMeter;
+
+    for (int i = 1; i < ranging_data.NumberOfObjectsFound; i++) {
+      uint16_t current_distance = ranging_data.RangeData[i].RangeMilliMeter;
+      if (current_distance < min_distance) {
+        min_distance = current_distance;
+      }
+    }
+
+    return min_distance;
+  } else {
+    return 0;
+  }
 }
 
 }  // namespace vl53l4cx
