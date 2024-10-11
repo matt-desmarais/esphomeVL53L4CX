@@ -1,4 +1,6 @@
+#include "Wire.h"
 #include "vl53l4cx.h"
+
 
 namespace esphome {
 namespace vl53l4cx {
