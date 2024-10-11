@@ -53,7 +53,7 @@ uint16_t VL53L4CXSensor::get_distance() {
   VL53L4CX_MultiRangingData_t ranging_data;
 
   // Use the sensor's API to get ranging data
-  if (this->vl53l4cx.VL53L4CX_GetMultiRangingData(&ranging_data) == 0) {
+  if (this->sensor.VL53L4CX_GetMultiRangingData(&ranging_data) == 0) {
     if (ranging_data.NumberOfObjectsFound > 0) {
       uint16_t min_distance = ranging_data.RangeData[0].RangeMilliMeter;
 
