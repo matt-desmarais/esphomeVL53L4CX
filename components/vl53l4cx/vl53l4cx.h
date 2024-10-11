@@ -9,7 +9,6 @@ namespace vl53l4cx {
 
 class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2c::I2CDevice {
  public:
-  VL53L4CXSensor() : i2c::I2CDevice(0x29) {}  // Pass the I2C address directly to the I2CDevice constructor
   void setup() override;
   void update() override;
 
