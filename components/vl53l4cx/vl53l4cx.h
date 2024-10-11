@@ -2,7 +2,9 @@
 
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/i2c/i2c.h"
-#include "VL53L4CX.h"
+//#include "VL53L4CX.h"
+#include "vl53l4cx_class.h"  // Include STM32Duino VL53L4CX library
+
 
 namespace esphome {
 namespace vl53l4cx {
