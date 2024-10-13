@@ -16,7 +16,9 @@ class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2
   void setup() override;
   void update() override;
 
-  void set_update_interval(uint32_t interval) { this->update_interval_ = interval; }
+  //void set_update_interval(uint32_t interval) { this->update_interval_ = interval; }
+  // Add constructor for setting update interval
+  void set_update_interval(uint32_t interval) { this->set_interval(interval); }
 
 
  protected:
