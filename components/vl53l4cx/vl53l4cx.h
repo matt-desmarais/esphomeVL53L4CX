@@ -7,7 +7,7 @@
 namespace esphome {
 namespace vl53l4cx {
 
-class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2c::I2CDevice {
+class VL53L4CXSensor : public sensor::Sensor, public PollingComponent(uint32_t 	update_interval), public i2c::I2CDevice {
  public:
   //VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
   // Constructor declaration
