@@ -13,7 +13,7 @@ class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2
   // Constructor declaration
   //VL53L4CXSensor();
   // Constructor that accepts an update_interval
-  VL53L4CXSensor(uint32_t update_interval : PollingComponent(update_interval));
+  VL53L4CXSensor(uint32_t update_interval);
   //VL53L4CXSensor() {}  // Constructor without setting I2C manually
   void setup() override;
   void update() override;
