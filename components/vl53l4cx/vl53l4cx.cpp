@@ -8,9 +8,9 @@ namespace vl53l4cx {
 static const char *TAG = "vl53l4cx.sensor";
 
 // Constructor definition without update_interval
-//VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(100) {}
+VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(100) {}
 // Constructor definition with update_interval
-VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
+//VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
 
 void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
