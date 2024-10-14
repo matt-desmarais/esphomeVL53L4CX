@@ -27,10 +27,12 @@ void VL53L4CXSensor::setup() {
   }
     // Set the sensor to long-range mode
   // Adjust the timing budget and distance mode for long-range operation
-  vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX::VL53L4CX_DISTANCEMODE_LONG);  // Set to long-range mode
-
+  //vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX::VL53L4CX_DISTANCEMODE_LONG);  // Set to long-range mode
+  vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);  // Macro constant, no need for VL53L4CX::
   // Set an appropriate timing budget for long-range mode (e.g., 50 ms)
-  vl53l4cx_.VL53L4CX_SetTimingBudget(50000);  // 50 ms
+  //vl53l4cx_.VL53L4CX_SetTimingBudget(50000);  // 50 ms
+  vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50 ms
+
 }
 
 void VL53L4CXSensor::update() {
