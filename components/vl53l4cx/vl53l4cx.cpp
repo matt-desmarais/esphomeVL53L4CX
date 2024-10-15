@@ -7,8 +7,14 @@ namespace vl53l4cx {
 
 static const char *TAG = "vl53l4cx.sensor";
 
-// Constructor
-VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
+// Default constructor
+VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(1000) {
+  // You can initialize other members if needed
+}
+
+VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {
+  // Initialization logic for the custom constructor with an update interval
+}
 
 // Setup function
 void VL53L4CXSensor::setup() {
