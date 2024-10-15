@@ -21,7 +21,7 @@ void VL53L4CXSensor::setup() {
   this->sensor_vl53l4cx_->begin();
   this->sensor_vl53l4cx_->VL53L4CX_Off();
 
-  if (this->sensor_vl53l4cx_->InitSensor(0x12) != 0) {
+  if (this->sensor_vl53l4cx_->InitSensor(0x29) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor");
     return;
   }
