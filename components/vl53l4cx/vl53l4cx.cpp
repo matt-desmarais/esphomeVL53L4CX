@@ -13,6 +13,9 @@ VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(upda
 void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
 
+  // Use the inherited I2CDevice's configured bus and address
+  this->setup_i2c_();
+
   // Initialize the VL53L4CX sensor without parameters
   if (!this->vl53l4cx_.begin()) {
     ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
@@ -21,8 +24,8 @@ void VL53L4CXSensor::setup() {
   }
 
   // Set sensor to long-range mode
-  vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);  // Set to long-range mode
-  vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // Set timing budget
+  vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);
+  vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);
 
   ESP_LOGCONFIG(TAG, "VL53L4CX successfully initialized in long-range mode.");
 }
@@ -31,7 +34,7 @@ void VL53L4CXSensor::update() {
   uint16_t distance = get_distance();
 
   if (distance > 0) {
-    ESP_LOGD(TAG, "Distance: %d mm", distance);  // Log the distance
+    ESP_LOGD(TAG, "Distance: %d mm", distance);
     publish_state(distance);
   } else {
     ESP_LOGE("VL53L4CX", "Invalid measurement, publishing NAN");
@@ -56,11 +59,11 @@ uint16_t VL53L4CXSensor::get_distance() {
     return min_distance;
   } else {
     ESP_LOGW(TAG, "No objects found");
-    return 0;  // No objects detected
+    return 0;
   }
 }
 
-// sets
+// Methods to set bus and address, though setup_i2c_() manages this
 void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus) {
   this->bus_ = bus;
 }
