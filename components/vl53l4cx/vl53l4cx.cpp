@@ -6,15 +6,12 @@
 namespace esphome {
 namespace vl53l4cx {
 
-static const char *TAG = "vl53l4cx";  // Used for logging
+static const char *TAG = "vl53l4cx";
 
 VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(15000), sensor_vl53l4cx_(nullptr) {}
 
 VL53L4CXSensor::~VL53L4CXSensor() {
-  if (sensor_vl53l4cx_ != nullptr) {
-    delete sensor_vl53l4cx_;  // Clean up memory
-    sensor_vl53l4cx_ = nullptr;
-  }
+  delete this->sensor_vl53l4cx_;
 }
 
 void VL53L4CXSensor::setup() {
@@ -24,7 +21,6 @@ void VL53L4CXSensor::setup() {
   this->sensor_vl53l4cx_->begin();
   this->sensor_vl53l4cx_->VL53L4CX_Off();
 
-  // Initialize sensor with default address (0x12)
   if (this->sensor_vl53l4cx_->InitSensor(0x12) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor");
     return;
@@ -46,13 +42,11 @@ void VL53L4CXSensor::update() {
     VL53L4CX_MultiRangingData_t multi_ranging_data;
     this->sensor_vl53l4cx_->VL53L4CX_GetMultiRangingData(&multi_ranging_data);
 
-    // Log object count and distances for debug
     ESP_LOGD(TAG, "Object count: %d", multi_ranging_data.NumberOfObjectsFound);
     for (int i = 0; i < multi_ranging_data.NumberOfObjectsFound; i++) {
       ESP_LOGD(TAG, "Object %d distance: %d mm", i, multi_ranging_data.RangeData[i].RangeMilliMeter);
     }
 
-    // Clear the interrupt and start a new measurement
     this->sensor_vl53l4cx_->VL53L4CX_ClearInterruptAndStartMeasurement();
   } else {
     ESP_LOGD(TAG, "No new data available from VL53L4CX sensor.");
@@ -61,3 +55,4 @@ void VL53L4CXSensor::update() {
 
 }  // namespace vl53l4cx
 }  // namespace esphome
+
