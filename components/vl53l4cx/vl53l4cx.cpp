@@ -70,9 +70,9 @@ void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus)
 
 void VL53L4CXSensor::set_i2c_address(uint8_t address)
 {
-    if (this->getAddress() != address)
+    if (this->address_ != address)
     {
-        this->setAddress(address);
+        this->address_ = address;
     }
 }
 
