@@ -13,10 +13,7 @@ VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(upda
 void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
 
-  // Use the inherited I2CDevice's configured bus and address
-  this->setup_i2c_();
-
-  // Initialize the VL53L4CX sensor without parameters
+  // Initialize the VL53L4CX sensor
   if (!this->vl53l4cx_.begin()) {
     ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
     this->mark_failed();
@@ -63,7 +60,6 @@ uint16_t VL53L4CXSensor::get_distance() {
   }
 }
 
-// Methods to set bus and address, though setup_i2c_() manages this
 void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus) {
   this->bus_ = bus;
 }
