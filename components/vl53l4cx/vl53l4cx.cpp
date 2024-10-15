@@ -15,11 +15,22 @@ static const char *TAG = "vl53l4cx";
 //}
 
 void VL53L4CXSensor::setup() {
-  ESP_LOGD(TAG, "Setting up VL53L4CX sensor...");
+  ESP_LOGD(TAG, "Before sensor_vl53l4cx_ initialization...");
   this->sensor_vl53l4cx_ = new VL53L4CX(&Wire, A1);
+  ESP_LOGD(TAG, "After sensor_vl53l4cx_ initialization...");
   
+  ESP_LOGD(TAG, "Calling begin...");
   this->sensor_vl53l4cx_->begin();
+  ESP_LOGD(TAG, "After begin...");
+  
+  ESP_LOGD(TAG, "Turning sensor off...");
   this->sensor_vl53l4cx_->VL53L4CX_Off();
+
+  //ESP_LOGD(TAG, "Setting up VL53L4CX sensor...");
+  //this->sensor_vl53l4cx_ = new VL53L4CX(&Wire, A1);
+  
+  //this->sensor_vl53l4cx_->begin();
+  //this->sensor_vl53l4cx_->VL53L4CX_Off();
 
   if (this->sensor_vl53l4cx_->InitSensor(0x12) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor");
