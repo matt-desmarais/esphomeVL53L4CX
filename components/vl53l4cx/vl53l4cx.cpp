@@ -22,8 +22,11 @@ void VL53L4CXSensor::setup() {
   Wire.begin();
   this->sensor_vl53l4cx_ = new VL53L4CX(&Wire, this->address_);  // Changed to allocate on the heap
   // Initialize the sensor.
-  this->sensor_vl53l4cx_.begin();
-  this->sensor_vl53l4cx_.VL53L4CX_Off();
+  this->sensor_vl53l4cx_->begin();
+  this->sensor_vl53l4cx_->VL53L4CX_Off();
+
+  //this->sensor_vl53l4cx_.begin();
+  //this->sensor_vl53l4cx_.VL53L4CX_Off();
   // Initialize the sensor
   if (sensor_vl53l4cx_.InitSensor(0x12) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor.");
@@ -38,6 +41,7 @@ void VL53L4CXSensor::setup() {
 
 // Update function (reads the distance and publishes it)
 void VL53L4CXSensor::update() {
+  uint8_t NewDataReady = 0;
   int status = this->sensor_vl53l4cx_->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
   VL53L4CX_MultiRangingData_t ranging_data;
   uint8_t new_data_ready = 0;
@@ -48,7 +52,7 @@ void VL53L4CXSensor::update() {
     ESP_LOGE(TAG, "No new data from VL53L4CX sensor.");
     return;
   }
-  if (status == 0 && new_data_ready != 0) {
+  if (status == 0 && NewDataReady != 0) {
     VL53L4CX_MultiRangingData_t MultiRangingData;
     this->sensor_vl53l4cx_->VL53L4CX_GetMultiRangingData(&MultiRangingData);  // Access pointer
 
