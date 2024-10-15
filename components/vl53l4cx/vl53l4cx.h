@@ -11,6 +11,7 @@ namespace vl53l4cx {
 
 class VL53L4CXSensor : public PollingComponent, public sensor::Sensor, public i2c::I2CDevice {
  public:
+  VL53L4CXSensor();
   VL53L4CXSensor(uint32_t update_interval);
   void setup() override;   // Setup function for initialization
   void update() override;  // Update function for reading sensor data
