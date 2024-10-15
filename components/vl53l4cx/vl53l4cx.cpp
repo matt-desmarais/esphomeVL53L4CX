@@ -16,7 +16,7 @@ VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(upda
 
 // Setup function
 void VL53L4CXSensor::setup() {
-  ESP_LOGCONFIG(TAG, "Setting up VL53L4CX sensor...");
+  ESP_LOGD(TAG, "Setting up VL53L4CX sensor...");
 
   // Initialize I2C
   Wire.begin();
@@ -36,7 +36,7 @@ void VL53L4CXSensor::setup() {
   this->sensor_vl53l4cx_->VL53L4CX_StartMeasurement();
   // Start measurement
   //sensor_vl53l4cx_.VL53L4CX_StartMeasurement();
-  ESP_LOGCONFIG(TAG, "VL53L4CX sensor successfully initialized.");
+  ESP_LOGD(TAG, "VL53L4CX sensor successfully initialized.");
 }
 
 // Update function (reads the distance and publishes it)
