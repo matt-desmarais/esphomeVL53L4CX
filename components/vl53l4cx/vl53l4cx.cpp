@@ -11,7 +11,7 @@ static const char *TAG = "vl53l4cx.sensor";
 VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval), sensor_vl53l4cx_(nullptr) {}
 //VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval), sensor_vl53l4cx_(&Wire, A1) {}
 // Default constructor
-VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(15000), sensor_vl53l4cx_(&Wire, A1) {}  // Assuming a default update interval of 15 seconds
+//VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(15000), sensor_vl53l4cx_(&Wire, A1) {}  // Assuming a default update interval of 15 seconds
 
 
 // Setup function
