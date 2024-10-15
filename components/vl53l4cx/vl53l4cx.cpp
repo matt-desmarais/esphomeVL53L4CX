@@ -8,24 +8,21 @@ namespace vl53l4cx {
 
 static const char *TAG = "vl53l4cx.sensor";
 
-// Constructor definition with update_interval support
 VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
 
 void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
 
-  // Initialize the VL53L4CX sensor over I2C
-  if (!this->vl53l4cx_.begin(this->bus_, this->address_)) {
+  // Initialize the VL53L4CX sensor without parameters
+  if (!this->vl53l4cx_.begin()) {
     ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
-    this->mark_failed();  // Mark the sensor as failed if initialization fails
+    this->mark_failed();
     return;
   }
 
-  // Set the sensor to long-range mode
+  // Set sensor to long-range mode
   vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);  // Set to long-range mode
-
-  // Set an appropriate timing budget for long-range mode (e.g., 50 ms)
-  vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50 ms
+  vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // Set timing budget
 
   ESP_LOGCONFIG(TAG, "VL53L4CX successfully initialized in long-range mode.");
 }
@@ -62,17 +59,15 @@ uint16_t VL53L4CXSensor::get_distance() {
     return 0;  // No objects detected
   }
 }
+
+// sets
 void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus) {
   this->bus_ = bus;
 }
 
 void VL53L4CXSensor::set_i2c_address(uint8_t address) {
-  if (this->address_ != address) {
-    this->address_ = address;
-    this->vl53l4cx_.setAddress(address);  // Assuming your driver supports this
-  }
+  this->address_ = address;
 }
-
 
 }  // namespace vl53l4cx
 }  // namespace esphome
