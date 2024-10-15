@@ -14,13 +14,13 @@ VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(upda
 void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX sensor...");
 
-  // Initialize the VL53L4CX sensor
+/*  // Initialize the VL53L4CX sensor
   if (!this->is_connected()) {
     ESP_LOGE(TAG, "VL53L4CX sensor not connected!");
     this->mark_failed();
     return;
   }
-
+*/
   // Initialize VL53L4CX settings
   if (this->vl53l4cx_.begin() != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor.");
