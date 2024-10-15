@@ -29,7 +29,7 @@ void VL53L4CXSensor::setup() {
   ESP_LOGD(TAG, "VL53L4CX sensor initialized successfully.");
   this->sensor_vl53l4cx_->VL53L4CX_StartMeasurement();
 }
-
+/*
 void VL53L4CXSensor::update() {
   ESP_LOGD(TAG, "Checking for new measurement data...");
 
@@ -51,7 +51,38 @@ void VL53L4CXSensor::update() {
   } else {
     ESP_LOGD(TAG, "No new data available from VL53L4CX sensor.");
   }
+}*/
+
+void VL53L4CXSensor::update() {
+  uint8_t NewDataReady = 0;
+  int status = 0;
+  VL53L4CX_MultiRangingData_t MultiRangingData;
+  VL53L4CX_MultiRangingData_t *pMultiRangingData = &MultiRangingData;
+
+  // Check if new measurement data is ready
+  status = this->sensor_vl53l4cx_->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
+  if (status || !NewDataReady) {
+    ESP_LOGE("VL53L4CX", "Data not ready or error: %d", status);
+    return;
+  }
+
+  // Get the measurement data
+  status = this->sensor_vl53l4cx_->VL53L4CX_GetMultiRangingData(pMultiRangingData);
+  if (!status) {
+    int num_objects = pMultiRangingData->NumberOfObjectsFound;
+    for (int i = 0; i < num_objects; i++) {
+      float distance = pMultiRangingData->RangeData[i].RangeMilliMeter / 1000.0;  // convert to meters
+      ESP_LOGD("VL53L4CX", "Distance to object %d: %.2f meters", i, distance);
+      publish_state(distance);
+    }
+
+    // Clear interrupt and prepare for the next measurement
+    this->sensor_vl53l4cx_->VL53L4CX_ClearInterruptAndStartMeasurement();
+  } else {
+    ESP_LOGE("VL53L4CX", "Failed to get ranging data: %d", status);
+  }
 }
+
 
 }  // namespace vl53l4cx
 }  // namespace esphome
