@@ -20,7 +20,7 @@ class VL53L4CXSensor : public PollingComponent, public sensor::Sensor, public i2
   float get_distance();
 
  private:
-  VL53L4CX vl53l4cx_; 
+  VL53L4CXSensor vl53l4cx_; 
 
 };
 
