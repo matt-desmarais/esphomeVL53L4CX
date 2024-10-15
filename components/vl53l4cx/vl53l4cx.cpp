@@ -55,4 +55,3 @@ void VL53L4CXSensor::update() {
 
 }  // namespace vl53l4cx
 }  // namespace esphome
-
