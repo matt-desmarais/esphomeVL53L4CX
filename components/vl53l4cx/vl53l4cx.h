@@ -7,7 +7,7 @@
 namespace esphome {
 namespace vl53l4cx {
 
-class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2c::I2CDevice {
+class VL53L4CXSensor : public PollingComponent, public sensor::Sensor, public i2c::I2CDevice {
  public:
   // Constructor declaration with update_interval
   VL53L4CXSensor(uint32_t update_interval);
@@ -17,8 +17,8 @@ class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2
 
   void setup() override;
   void update() override;
-  void set_i2c_address(uint8_t address);
-  void set_i2c_bus (i2c::I2CBus *bus);
+  //void set_i2c_address(uint8_t address);
+  //void set_i2c_bus (i2c::I2CBus *bus);
 
  protected:
   i2c::I2CBus *bus_;
