@@ -21,6 +21,8 @@ class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2
   void set_i2c_bus (i2c::I2CBus *bus);
 
  protected:
+  i2c::I2CBus *bus_;
+  uint8_t address_;
   VL53L4CX vl53l4cx_;
   uint16_t get_distance();
 };
