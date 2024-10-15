@@ -59,7 +59,7 @@ uint16_t VL53L4CXSensor::get_distance() {
     return 0;
   }
 }
-/8 In vl53l4cx.cpp
+/* In vl53l4cx.cpp
 void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus) {
   // Do nothing (I2C is already handled by the i2c_device_schema)
 }
