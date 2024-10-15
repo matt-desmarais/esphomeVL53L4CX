@@ -1,70 +1,57 @@
 #include "vl53l4cx.h"
 #include "esphome/core/log.h"
-#include "vl53l4cx_class.h"  // Assuming the VL53L4CX library is included
+#include "vl53l4cx_class.h"  // Ensure VL53L4CX class is included
 
 namespace esphome {
 namespace vl53l4cx {
 
 static const char *TAG = "vl53l4cx.sensor";
 
-// Default constructor
-VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(1000) {
-  // You can initialize other members if needed
-}
-
-VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {
-  // Initialization logic for the custom constructor with an update interval
-}
+// Constructor
+VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval), sensor_vl53l4cx_(&Wire, A1) {}
 
 // Setup function
 void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX sensor...");
 
-/*  // Initialize the VL53L4CX sensor
-  if (!this->is_connected()) {
-    ESP_LOGE(TAG, "VL53L4CX sensor not connected!");
-    this->mark_failed();
-    return;
-  }
-*/
-  // Initialize VL53L4CX settings
-  if (this->vl53l4cx_.begin() != 0) {
+  // Initialize I2C
+  Wire.begin();
+
+  // Initialize the sensor
+  if (sensor_vl53l4cx_.InitSensor(0x12) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor.");
     this->mark_failed();
     return;
   }
 
-  // Set the sensor mode to long-distance mode
-  this->vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);
-  this->vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50 ms timing budget
-  ESP_LOGCONFIG(TAG, "VL53L4CX successfully initialized in long-range mode.");
+  // Start measurement
+  sensor_vl53l4cx_.VL53L4CX_StartMeasurement();
+  ESP_LOGCONFIG(TAG, "VL53L4CX sensor successfully initialized.");
 }
 
 // Update function (reads the distance and publishes it)
 void VL53L4CXSensor::update() {
-  float distance = this->get_distance();
-
-  if (!isnan(distance)) {
-    ESP_LOGD(TAG, "Distance: %.2f mm", distance);
-    this->publish_state(distance);  // Publish the distance value
-  } else {
-    ESP_LOGE(TAG, "Failed to read distance from VL53L4CX sensor.");
-    this->publish_state(NAN);  // Publish NAN in case of failure
-  }
-}
-
-// Function to read distance from VL53L4CX sensor
-float VL53L4CXSensor::get_distance() {
   VL53L4CX_MultiRangingData_t ranging_data;
+  uint8_t new_data_ready = 0;
 
-  // Read ranging data
-  if (this->vl53l4cx_.VL53L4CX_GetMultiRangingData(&ranging_data) == 0) {
-    if (ranging_data.NumberOfObjectsFound > 0) {
-      uint16_t distance = ranging_data.RangeData[0].RangeMilliMeter;
-      return static_cast<float>(distance);  // Return distance in millimeters
-    }
+  // Check if new data is ready
+  if (sensor_vl53l4cx_.VL53L4CX_GetMeasurementDataReady(&new_data_ready) != 0 || !new_data_ready) {
+    ESP_LOGE(TAG, "No new data from VL53L4CX sensor.");
+    return;
   }
-  return NAN;  // Return NAN if reading fails
+
+  // Read the distance data
+  if (sensor_vl53l4cx_.VL53L4CX_GetMultiRangingData(&ranging_data) == 0 && ranging_data.NumberOfObjectsFound > 0) {
+    uint16_t distance = ranging_data.RangeData[0].RangeMilliMeter;
+    ESP_LOGD(TAG, "Distance: %d mm", distance);
+    this->publish_state(static_cast<float>(distance));
+  } else {
+    ESP_LOGE(TAG, "Failed to read data from VL53L4CX sensor.");
+    this->publish_state(NAN);
+  }
+
+  // Clear interrupt and start next measurement
+  sensor_vl53l4cx_.VL53L4CX_ClearInterruptAndStartMeasurement();
 }
 
 }  // namespace vl53l4cx
