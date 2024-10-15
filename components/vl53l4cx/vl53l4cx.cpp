@@ -59,14 +59,14 @@ uint16_t VL53L4CXSensor::get_distance() {
     return 0;
   }
 }
-
+/*
 void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus) {
   this->bus_ = bus;
 }
 
 void VL53L4CXSensor::set_i2c_address(uint8_t address) {
   this->address_ = address;
-}
+}*/
 
 }  // namespace vl53l4cx
 }  // namespace esphome
