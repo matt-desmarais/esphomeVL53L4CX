@@ -7,33 +7,8 @@ namespace vl53l4cx {
 
 static const char *TAG = "vl53l4cx.sensor";
 
-// Constructor definition without update_interval
-VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(100) {}
-// Constructor definition with update_interval
-//VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
-
-/*void VL53L4CXSensor::setup() {
-  ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
-
-  // Set the I2C bus for the sensor using the methods from i2c::I2CDevice
-//  this->set_i2c_bus(i2c_arduinoi2cbus_id);  // Or the correct I2C bus ID
-//  this->set_i2c_address(0x29);  // Set the I2C address for VL53L4CX sensor
-//  this->set_i2c_address(0x29);  // Set the default I2C address for VL53L4CX
-  // Initialize the VL53L4CX sensor over I2C
-  if (!this->vl53l4cx_.begin()) {
-    ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
-    this->mark_failed();
-    return;
-  }
-    // Set the sensor to long-range mode
-  // Adjust the timing budget and distance mode for long-range operation
-  //vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX::VL53L4CX_DISTANCEMODE_LONG);  // Set to long-range mode
-  vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);  // Macro constant, no need for VL53L4CX::
-  // Set an appropriate timing budget for long-range mode (e.g., 50 ms)
-  //vl53l4cx_.VL53L4CX_SetTimingBudget(50000);  // 50 ms
-  vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50 ms
-
-}*/
+// Constructor definition with update_interval support
+VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
 
 void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
@@ -44,14 +19,21 @@ void VL53L4CXSensor::setup() {
     this->mark_failed();  // Mark the sensor as failed if initialization fails
     return;
   }
-  ESP_LOGCONFIG(TAG, "VL53L4CX successfully initialized.");
-}
 
+  // Set the sensor to long-range mode
+  vl53l4cx_.VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);  // Set to long-range mode
+
+  // Set an appropriate timing budget for long-range mode (e.g., 50 ms)
+  vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50 ms
+
+  ESP_LOGCONFIG(TAG, "VL53L4CX successfully initialized in long-range mode.");
+}
 
 void VL53L4CXSensor::update() {
   uint16_t distance = get_distance();
 
   if (distance > 0) {
+    ESP_LOGD(TAG, "Distance: %d mm", distance);  // Log the distance
     publish_state(distance);
   } else {
     ESP_LOGE("VL53L4CX", "Invalid measurement, publishing NAN");
@@ -75,7 +57,8 @@ uint16_t VL53L4CXSensor::get_distance() {
 
     return min_distance;
   } else {
-    return 0;
+    ESP_LOGW(TAG, "No objects found");
+    return 0;  // No objects detected
   }
 }
 
