@@ -28,12 +28,12 @@ void VL53L4CXSensor::setup() {
   //this->sensor_vl53l4cx_.begin();
   //this->sensor_vl53l4cx_.VL53L4CX_Off();
   // Initialize the sensor
-  if (sensor_vl53l4cx_.InitSensor(0x12) != 0) {
+  if (this->sensor_vl53l4cx_->InitSensor(0x12) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor.");
     this->mark_failed();
     return;
   }
-  this->sensor_vl53l4cx_.VL53L4CX_StartMeasurement();
+  this->sensor_vl53l4cx_->VL53L4CX_StartMeasurement();
   // Start measurement
   //sensor_vl53l4cx_.VL53L4CX_StartMeasurement();
   ESP_LOGCONFIG(TAG, "VL53L4CX sensor successfully initialized.");
