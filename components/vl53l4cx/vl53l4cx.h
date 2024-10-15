@@ -9,22 +9,16 @@ namespace vl53l4cx {
 
 class VL53L4CXSensor : public sensor::Sensor, public PollingComponent, public i2c::I2CDevice {
  public:
-  //VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
-  // Constructor declaration
+  // Constructor declaration with update_interval
+  VL53L4CXSensor(uint32_t update_interval);
+  
+  // Default constructor if needed
   VL53L4CXSensor();
-  // Constructor that accepts an update_interval
-  //VL53L4CXSensor(uint32_t update_interval);
-  //VL53L4CXSensor() {}  // Constructor without setting I2C manually
+
   void setup() override;
   void update() override;
 
-  //void set_update_interval(uint32_t interval) { this->update_interval_ = interval; }
-  // Add constructor for setting update interval
-  //void set_update_interval(uint32_t interval) { this->set_interval(interval); }
-
-
  protected:
-//  VL53L4CX vl53l4cx_ = new VL53L4CXSensor();
   VL53L4CX vl53l4cx_;
   uint16_t get_distance();
 };
