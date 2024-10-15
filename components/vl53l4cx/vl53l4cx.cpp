@@ -1,6 +1,6 @@
 #include "vl53l4cx.h"
 #include "esphome/core/log.h"
-#include "vl53l4x_class.h"  // Assuming the VL53L4CX library is included
+#include "./vl53l4x_class.h"  // Assuming the VL53L4CX library is included
 
 namespace esphome {
 namespace vl53l4cx {
