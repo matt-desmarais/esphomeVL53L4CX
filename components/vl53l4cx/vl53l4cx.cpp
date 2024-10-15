@@ -12,7 +12,7 @@ VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(100) {}
 // Constructor definition with update_interval
 //VL53L4CXSensor::VL53L4CXSensor(uint32_t update_interval) : PollingComponent(update_interval) {}
 
-void VL53L4CXSensor::setup() {
+/*void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
 
   // Set the I2C bus for the sensor using the methods from i2c::I2CDevice
@@ -33,7 +33,20 @@ void VL53L4CXSensor::setup() {
   //vl53l4cx_.VL53L4CX_SetTimingBudget(50000);  // 50 ms
   vl53l4cx_.VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50 ms
 
+}*/
+
+void VL53L4CXSensor::setup() {
+  ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
+
+  // Initialize the VL53L4CX sensor over I2C
+  if (!this->vl53l4cx_.begin()) {
+    ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
+    this->mark_failed();  // Mark the sensor as failed if initialization fails
+    return;
+  }
+  ESP_LOGCONFIG(TAG, "VL53L4CX successfully initialized.");
 }
+
 
 void VL53L4CXSensor::update() {
   uint16_t distance = get_distance();
