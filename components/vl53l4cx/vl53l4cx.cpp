@@ -8,11 +8,11 @@ namespace vl53l4cx {
 
 static const char *TAG = "vl53l4cx";
 
-VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(15000), sensor_vl53l4cx_(nullptr) {}
+//VL53L4CXSensor::VL53L4CXSensor() : PollingComponent(15000), sensor_vl53l4cx_(nullptr) {}
 
-VL53L4CXSensor::~VL53L4CXSensor() {
-  delete this->sensor_vl53l4cx_;
-}
+//VL53L4CXSensor::~VL53L4CXSensor() {
+//  delete this->sensor_vl53l4cx_;
+//}
 
 void VL53L4CXSensor::setup() {
   ESP_LOGD(TAG, "Setting up VL53L4CX sensor...");
