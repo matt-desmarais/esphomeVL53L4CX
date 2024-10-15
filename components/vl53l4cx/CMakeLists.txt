@@ -1,5 +1,6 @@
 esphome_component_register(
-  sensor  # This registers the sensor platform
+  sensor
   INCLUDE_DIRS "."
+  SRCS "vl53l4cx.cpp"
   REQUIRES i2c
 )
