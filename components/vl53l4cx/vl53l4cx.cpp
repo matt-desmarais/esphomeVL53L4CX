@@ -2,6 +2,8 @@
 #include "esphome/core/log.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/i2c/i2c.h"
+#include "esphome/core/component.h"  // Ensure this is included
+
 
 namespace esphome {
 namespace vl53l4cx {
