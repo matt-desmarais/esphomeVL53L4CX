@@ -18,6 +18,10 @@ class VL53L4CXSensor : public PollingComponent, public sensor::Sensor, public i2
  protected:
   // Function to read distance from VL53L4CX sensor
   float get_distance();
+
+ private:
+  VL53L4CX vl53l4cx_; 
+
 };
 
 }  // namespace vl53l4cx
