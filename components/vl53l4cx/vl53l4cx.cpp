@@ -70,9 +70,9 @@ void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus)
 
 void VL53L4CXSensor::set_i2c_address(uint8_t address)
 {
-    if (distanceSensor.getAddress() != address)
+    if (VL53L4CXSensor.getAddress() != address)
     {
-        distanceSensor.setAddress(address);
+        VL53L4CXSensor.setAddress(address);
     }
 }
 
