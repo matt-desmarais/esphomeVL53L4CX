@@ -67,7 +67,7 @@ void VL53L4CXSensor::update() {
   }
 
   // Clear interrupt and start next measurement
-  sensor_vl53l4cx_.VL53L4CX_ClearInterruptAndStartMeasurement();
+  this->sensor_vl53l4cx_->VL53L4CX_ClearInterruptAndStartMeasurement();
 }
 
 }  // namespace vl53l4cx
