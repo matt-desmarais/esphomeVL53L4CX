@@ -15,7 +15,7 @@ void VL53L4CXSensor::setup() {
   ESP_LOGCONFIG(TAG, "Setting up VL53L4CX...");
 
   // Initialize the VL53L4CX sensor over I2C
-  if (!this->vl53l4cx_.begin()) {
+  if (!this->vl53l4cx_.begin(this->bus_, this->address_)) {
     ESP_LOGE(TAG, "Could not initialize VL53L4CX sensor.");
     this->mark_failed();  // Mark the sensor as failed if initialization fails
     return;
@@ -62,18 +62,15 @@ uint16_t VL53L4CXSensor::get_distance() {
     return 0;  // No objects detected
   }
 }
-
-// sets
-void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus)
-{
+void VL53L4CXSensor::set_i2c_bus(i2c::I2CBus *bus) {
+  this->bus_ = bus;
 }
 
-void VL53L4CXSensor::set_i2c_address(uint8_t address)
-{
-    if (this->address_ != address)
-    {
-        this->address_ = address;
-    }
+void VL53L4CXSensor::set_i2c_address(uint8_t address) {
+  if (this->address_ != address) {
+    this->address_ = address;
+    this->vl53l4cx_.setAddress(address);  // Assuming your driver supports this
+  }
 }
 
 
