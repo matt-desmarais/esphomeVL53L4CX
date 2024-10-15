@@ -48,7 +48,7 @@ void VL53L4CXSensor::update() {
   this->sensor_vl53l4cx_ = new VL53L4CX(&Wire, this->address_);  // Changed to allocate on the heap
 
   // Check if new data is ready
-  if (sensor_vl53l4cx_.VL53L4CX_GetMeasurementDataReady(&new_data_ready) != 0 || !new_data_ready) {
+  if (this->sensor_vl53l4cx_->VL53L4CX_GetMeasurementDataReady(&new_data_ready) != 0 || !new_data_ready) {
     ESP_LOGE(TAG, "No new data from VL53L4CX sensor.");
     return;
   }
