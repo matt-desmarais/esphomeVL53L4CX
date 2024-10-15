@@ -1,5 +1,6 @@
 #pragma once
 
+#include "esphome/core/component.h"  // Ensure this is included
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/i2c/i2c.h"
 #include "vl53l4cx_class.h"
