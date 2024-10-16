@@ -42,6 +42,10 @@ void VL53L4CXSensor::setup() {
 }
 */
 void VL53L4CXSensor::setup() {
+  // Force logging level to VERBOSE for all components
+  esp_log_level_set("*", ESP_LOG_VERBOSE);
+
+  ESP_LOGI("vl53l4cx", "Log level set to VERBOSE");
   // Start the I2C communication
   Wire.begin();
   
