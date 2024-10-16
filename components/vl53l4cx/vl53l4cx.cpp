@@ -16,17 +16,13 @@ void VL53L4CXSensor::setup() {
 
   ESP_LOGI(TAG, "Log level set to VERBOSE");
 
-  // Instead of dynamic_cast, we assume the I2C bus is correctly assigned.
-  // ESPHome should handle I2C initialization automatically.
-  TwoWire *wire = this->i2c_bus_->get_wire();  // Get TwoWire directly from i2c::I2CBus
-
-  // Initialize the static VL53L4CX sensor instance
+  // Initialize the static VL53L4CX sensor instance using the ESPHome I2C bus
   if (!sensor_instance) {
-    sensor_instance = new VL53L4CX(wire, A1);  // A1 is the shutdown pin
+    sensor_instance = new VL53L4CX(&Wire, A1);  // A1 is the shutdown pin
   }
 
-  // Initialize I2C bus
-  wire->begin();
+  // Initialize the I2C bus (ESPHome handles this, so no need for manual initialization)
+  Wire.begin();  // Use the standard Wire object
 
   // Begin sensor
   sensor_instance->begin();
