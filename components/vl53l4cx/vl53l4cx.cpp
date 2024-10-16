@@ -107,6 +107,12 @@ void VL53L4CXSensor::update() {
   // Clear interrupts and restart the measurement
   ESP_LOGV(TAG, "Clearing interrupts and starting a new measurement...");
   status = sensor_instance->VL53L4CX_ClearInterruptAndStartMeasurement();
+
+  if (status == -1) {
+    ESP_LOGW(TAG, "VL53L4CX_GetMeasurementDataReady failed. Re-initializing sensor...");
+    reinitialize_sensor();  // Try to re-initialize the sensor if it fails
+    return;  // Exit to skip this update cycle
+  }
   
   if (status != 0) {
     ESP_LOGE(TAG, "VL53L4CX_ClearInterruptAndStartMeasurement failed with status: %d", status);
@@ -114,6 +120,31 @@ void VL53L4CXSensor::update() {
     ESP_LOGV(TAG, "Measurement restarted successfully.");
   }
 }
+
+
+
+
+
+void VL53L4CXSensor::reinitialize_sensor() {
+  ESP_LOGI(TAG, "Re-initializing VL53L4CX sensor...");
+
+  sensor_instance->VL53L4CX_Off();  // Turn off the sensor
+  delay(100);  // Give some time for the sensor to power down
+  sensor_instance->VL53L4CX_On();   // Power it back on
+  delay(100);  // Allow the sensor to stabilize
+
+  // Re-initialize the sensor
+  if (sensor_instance->InitSensor(0x12) != 0) {
+    ESP_LOGE(TAG, "Failed to re-initialize VL53L4CX sensor.");
+  } else {
+    ESP_LOGI(TAG, "VL53L4CX sensor successfully re-initialized.");
+    sensor_instance->VL53L4CX_StartMeasurement();  // Start measurements again
+  }
+}
+
+
+
+
 
 
 /*
