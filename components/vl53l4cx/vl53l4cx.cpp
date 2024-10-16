@@ -18,7 +18,7 @@ void VL53L4CXSensor::setup() {
   ESP_LOGD(TAG, "Before sensor_vl53l4cx_ initialization...");
   this->sensor_vl53l4cx_ = new VL53L4CX(&Wire, A1);
   ESP_LOGD(TAG, "After sensor_vl53l4cx_ initialization...");
-  
+  delay(500);
   ESP_LOGD(TAG, "Calling begin...");
   this->sensor_vl53l4cx_->begin();
   ESP_LOGD(TAG, "After begin...");
