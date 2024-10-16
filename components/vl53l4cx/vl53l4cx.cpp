@@ -92,7 +92,7 @@ void VL53L4CXSensor::update() {
       ESP_LOGI(TAG, "Object %d: Distance: %d mm", i, distance);
       
       // Update the shortest distance
-      if (distance > 0 && distance < shortest_distance) {
+      if (distance > 0 && distance < 8000 && distance < shortest_distance) {
         shortest_distance = distance;
       }
     }
