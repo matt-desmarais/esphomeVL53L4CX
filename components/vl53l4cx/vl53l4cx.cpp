@@ -60,6 +60,12 @@ void VL53L4CXSensor::update() {
   // Check for new measurement data
   ESP_LOGV(TAG, "Calling VL53L4CX_GetMeasurementDataReady...");
   status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
+
+  if (status == -1) {
+    ESP_LOGW(TAG, "VL53L4CX_GetMeasurementDataReady failed. Re-initializing sensor...");
+    reinitialize_sensor();  // Try to re-initialize the sensor if it fails
+    return;  // Exit to skip this update cycle
+  }
   
   if (status != 0) {
     ESP_LOGE(TAG, "VL53L4CX_GetMeasurementDataReady failed with status: %d", status);
@@ -78,12 +84,6 @@ void VL53L4CXSensor::update() {
   // Get ranging data
   ESP_LOGV(TAG, "Calling VL53L4CX_GetMultiRangingData...");
   status = sensor_instance->VL53L4CX_GetMultiRangingData(pMultiRangingData);
-
-  if (status == -1) {
-    ESP_LOGW(TAG, "VL53L4CX_GetMeasurementDataReady failed. Re-initializing sensor...");
-    reinitialize_sensor();  // Try to re-initialize the sensor if it fails
-    return;  // Exit to skip this update cycle
-  }
   
   if (status != 0) {
     ESP_LOGE(TAG, "VL53L4CX_GetMultiRangingData failed with status: %d", status);
