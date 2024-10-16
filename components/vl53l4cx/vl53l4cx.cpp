@@ -16,15 +16,9 @@ void VL53L4CXSensor::setup() {
 
   ESP_LOGI(TAG, "Log level set to VERBOSE");
 
-  // Get the I2C bus using the i2c::I2CDevice object
-  auto *i2c_device = dynamic_cast<i2c::I2CDevice *>(this->i2c_bus_);
-  if (!i2c_device) {
-    ESP_LOGE(TAG, "I2C bus not initialized correctly!");
-    return;
-  }
-
-  // Get the underlying TwoWire object from the I2C device
-  TwoWire *wire = i2c_device->get_i2c_bus();
+  // Instead of dynamic_cast, we assume the I2C bus is correctly assigned.
+  // ESPHome should handle I2C initialization automatically.
+  TwoWire *wire = this->i2c_bus_->get_wire();  // Get TwoWire directly from i2c::I2CBus
 
   // Initialize the static VL53L4CX sensor instance
   if (!sensor_instance) {
