@@ -52,7 +52,7 @@ void VL53L4CXSensor::update() {
   int status;
 
   // Turn on LED to indicate processing (if applicable)
-  digitalWrite(LedPin, HIGH); 
+//  digitalWrite(LedPin, HIGH); 
 
   // Wait for new measurement data
   do {
@@ -101,7 +101,7 @@ void VL53L4CXSensor::update() {
   }
 
   // Turn off LED after processing
-  digitalWrite(LedPin, LOW);  
+  //digitalWrite(LedPin, LOW);  
 }
 
 
