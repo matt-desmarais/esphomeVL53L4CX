@@ -24,7 +24,7 @@ void VL53L4CXSensor::setup() {
 
   // Initialize the I2C bus (ESPHome handles this, so no need for manual initialization)
   Wire.begin();  // Use the standard Wire object
-
+  Wire.setClock(50000);  // 50 kHz
   // Begin sensor
   sensor_instance->begin();
 
