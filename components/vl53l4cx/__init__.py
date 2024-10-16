@@ -18,7 +18,7 @@ CONFIG_SCHEMA = sensor.sensor_schema().extend({
 }).extend(cv.polling_component_schema('100ms')).extend(i2c.i2c_device_schema(0x29))  # Updated i2c device schema
 
 # Debugging logs
-logger.log_debug("vl53l4cx", "Registering VL53L4CX sensor"))
+logger.log_debug("vl53l4cx", "Registering VL53L4CX sensor")
 
 
 # Define the setup for the sensor component
