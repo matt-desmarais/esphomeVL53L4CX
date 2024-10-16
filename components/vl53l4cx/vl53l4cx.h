@@ -11,7 +11,10 @@ namespace vl53l4cx {
 class VL53L4CXSensor : public PollingComponent, public sensor::Sensor {
  public:
   // Constructor
-  VL53L4CXSensor() = default;
+//  VL53L4CXSensor() = default;
+  VL53L4CXSensor() {
+    ESP_LOGI("vl53l4cx", "VL53L4CXSensor constructor called...");
+  }
 
   // Setup function to initialize the sensor
   void setup() override;
