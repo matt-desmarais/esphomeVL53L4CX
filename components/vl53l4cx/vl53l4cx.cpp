@@ -84,3 +84,5 @@ float VL53L4CXSensor::get_setup_priority() const {
 
 }  // namespace vl53l4cx
 }  // namespace esphome
+// Ensure the component is registered in ESPHome
+esphome::Application::register_component(new esphome::vl53l4cx::VL53L4CXSensor());
