@@ -132,7 +132,9 @@ void VL53L4CXSensor::reinitialize_sensor() {
   delay(100);  // Give some time for the sensor to power down
   sensor_instance->VL53L4CX_On();   // Power it back on
   delay(100);  // Allow the sensor to stabilize
-
+  sensor_instance->begin();
+  // Turn off the sensor initially
+  sensor_instance->VL53L4CX_Off();
   // Re-initialize the sensor
   if (sensor_instance->InitSensor(0x12) != 0) {
     ESP_LOGE(TAG, "Failed to re-initialize VL53L4CX sensor.");
