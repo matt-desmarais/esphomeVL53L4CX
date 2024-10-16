@@ -51,6 +51,62 @@ void VL53L4CXSensor::update() {
   uint8_t NewDataReady = 0;
   int status;
 
+  // Log before checking for new data
+  ESP_LOGV(TAG, "Calling VL53L4CX_GetMeasurementDataReady...");
+  
+  // Wait for new measurement data
+  do {
+    status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
+    ESP_LOGV(TAG, "Measurement Data Ready status: %d, NewDataReady: %d", status, NewDataReady);
+  } while (!NewDataReady);
+
+  // Log after the loop to check data readiness
+  ESP_LOGD(TAG, "New data ready: %d, Status: %d", NewDataReady, status);
+
+  if ((!status) && (NewDataReady != 0)) {
+    // Log before getting ranging data
+    ESP_LOGV(TAG, "Calling VL53L4CX_GetMultiRangingData...");
+
+    // Get ranging data
+    status = sensor_instance->VL53L4CX_GetMultiRangingData(pMultiRangingData);
+    ESP_LOGV(TAG, "Ranging data retrieval status: %d", status);
+
+    if (status == 0 && pMultiRangingData->NumberOfObjectsFound > 0) {
+      // Log the number of objects found
+      ESP_LOGD(TAG, "Number of objects found: %d", pMultiRangingData->NumberOfObjectsFound);
+
+      // Assuming you want to measure the first object
+      int distance = pMultiRangingData->RangeData[0].RangeMilliMeter;
+      ESP_LOGI(TAG, "Distance to first object: %d mm", distance);
+
+      // Publish the distance to ESPHome
+      this->publish_state(distance);
+
+      // Log before clearing interrupts
+      ESP_LOGV(TAG, "Clearing interrupts and starting a new measurement...");
+
+      // Clear interrupts and restart the measurement
+      sensor_instance->VL53L4CX_ClearInterruptAndStartMeasurement();
+    } else {
+      ESP_LOGW(TAG, "No objects found or failed to retrieve ranging data.");
+    }
+  } else {
+    // Log warning if data could not be retrieved
+    ESP_LOGW(TAG, "Failed to get measurement data. Status: %d, NewDataReady: %d", status, NewDataReady);
+    this->publish_state(NAN);
+  }
+}
+
+
+/*
+void VL53L4CXSensor::update() {
+  ESP_LOGD(TAG, "Checking for new measurement data...");
+
+  VL53L4CX_MultiRangingData_t MultiRangingData;
+  VL53L4CX_MultiRangingData_t *pMultiRangingData = &MultiRangingData;
+  uint8_t NewDataReady = 0;
+  int status;
+
   // Wait for new measurement data
   do {
     status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
@@ -80,7 +136,7 @@ void VL53L4CXSensor::update() {
 float VL53L4CXSensor::get_setup_priority() const {
 //  return setup_priority::DATA;  // Use appropriate setup priority (can be HARDWARE, DATA, etc.)
   return setup_priority::HARDWARE;
-}
+}*/
 
 }  // namespace vl53l4cx
 }  // namespace esphome
