@@ -77,7 +77,8 @@ void VL53L4CXSensor::update() {
 }
 
 float VL53L4CXSensor::get_setup_priority() const {
-  return setup_priority::DATA;  // Use appropriate setup priority (can be HARDWARE, DATA, etc.)
+//  return setup_priority::DATA;  // Use appropriate setup priority (can be HARDWARE, DATA, etc.)
+  return setup_priority::HARDWARE;
 }
 
 }  // namespace vl53l4cx
