@@ -17,9 +17,8 @@ CONFIG_SCHEMA = sensor.sensor_schema().extend({
     cv.Optional(CONF_ACCURACY_DECIMALS, default=0): cv.int_,
 }).extend(cv.polling_component_schema('100ms')).extend(i2c.i2c_device_schema(0x29))  # Updated i2c device schema
 
-# Debugging logs
-logger.log_debug("vl53l4cx", "Registering VL53L4CX sensor")
-
+# Correct way to log in ESPHome using ESPHome logging
+cg.add(cg.global_ns.esph_log('I', "Registering VL53L4CX sensor"))
 
 # Define the setup for the sensor component
 async def to_code(config):
