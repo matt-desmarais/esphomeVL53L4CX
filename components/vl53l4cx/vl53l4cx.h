@@ -22,6 +22,8 @@ class VL53L4CXSensor : public PollingComponent, public sensor::Sensor {
   // Update function to fetch new distance measurements
   void update() override;
 
+  void reinitialize_sensor();
+
   // This will be called to set up the hardware (sensor)
   float get_setup_priority() const override;
 
