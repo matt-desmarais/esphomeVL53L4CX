@@ -17,12 +17,13 @@ CONFIG_SCHEMA = sensor.sensor_schema().extend({
     cv.Optional(CONF_ACCURACY_DECIMALS, default=0): cv.int_,
 }).extend(cv.polling_component_schema('100ms')).extend(i2c.i2c_device_schema(0x29))  # Updated i2c device schema
 
-# Correct way to log in ESPHome using ESPHome logging
-cg.add(cg.global_ns.esph_log('I', "Registering VL53L4CX sensor"))
-
 # Define the setup for the sensor component
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
+    cg.add(var.set_unit_of_measurement(config[CONF_UNIT_OF_MEASUREMENT]))
+    cg.add(var.set_icon(config[CONF_ICON]))
+    cg.add(var.set_accuracy_decimals(config[CONF_ACCURACY_DECIMALS]))
+
     await cg.register_component(var, config)
     await sensor.register_sensor(var, config)
     await i2c.register_i2c_device(var, config)
