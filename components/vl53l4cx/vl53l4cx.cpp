@@ -50,6 +50,50 @@ void VL53L4CXSensor::update() {
   VL53L4CX_MultiRangingData_t *pMultiRangingData = &MultiRangingData;
   uint8_t NewDataReady = 0;
   int status;
+  int retries = 100;  // Adjust retries to avoid long blocking
+  int shortest_distance = INT_MAX;
+
+  // Check for new measurement data with timeout
+  do {
+    status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
+    retries--;
+    delay(1);  // Small delay to avoid blocking the main loop
+  } while (!NewDataReady && retries > 0);
+
+  if ((!status) && (NewDataReady != 0)) {
+    // Get ranging data
+    status = sensor_instance->VL53L4CX_GetMultiRangingData(pMultiRangingData);
+
+    if (status == 0 && pMultiRangingData->NumberOfObjectsFound > 0) {
+      for (int i = 0; i < pMultiRangingData->NumberOfObjectsFound; i++) {
+        if (pMultiRangingData->RangeData[i].RangeMilliMeter < shortest_distance) {
+          shortest_distance = pMultiRangingData->RangeData[i].RangeMilliMeter;
+        }
+      }
+      ESP_LOGI(TAG, "Shortest Distance: %d mm", shortest_distance);
+      this->publish_state(shortest_distance);
+    } else {
+      ESP_LOGW(TAG, "No objects found or failed to retrieve ranging data.");
+      this->publish_state(NAN);
+    }
+
+    // Clear interrupts and restart the measurement
+    sensor_instance->VL53L4CX_ClearInterruptAndStartMeasurement();
+  } else {
+    ESP_LOGW(TAG, "Failed to get measurement data");
+    this->publish_state(NAN);
+  }
+}
+
+
+/*
+void VL53L4CXSensor::update() {
+  ESP_LOGD(TAG, "Checking for new measurement data...");
+
+  VL53L4CX_MultiRangingData_t MultiRangingData;
+  VL53L4CX_MultiRangingData_t *pMultiRangingData = &MultiRangingData;
+  uint8_t NewDataReady = 0;
+  int status;
 
   // Turn on LED to indicate processing (if applicable)
 //  digitalWrite(LedPin, HIGH); 
@@ -103,7 +147,7 @@ void VL53L4CXSensor::update() {
   // Turn off LED after processing
   //digitalWrite(LedPin, LOW);  
 }
-
+*/
 
 
 /*
