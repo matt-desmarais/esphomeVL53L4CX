@@ -40,9 +40,9 @@ void VL53L4CXSensor::setup() {
   // Start continuous measurements
   sensor_instance->VL53L4CX_StartMeasurement();
 
-//  sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(10000);  // Set timing budget to 100ms
-//  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);  // Switch to long-range mode
-
+  sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(10000);  // Set timing budget to 100ms
+  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_MEDIUM);  // Switch to long-range mode
+  
   ESP_LOGI(TAG, "VL53L4CX setup complete.");
 }
 
