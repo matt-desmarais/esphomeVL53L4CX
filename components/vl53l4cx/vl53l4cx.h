@@ -1,31 +1,29 @@
-#ifndef ESPHOME_VL53L4CX_SENSOR_H
-#define ESPHOME_VL53L4CX_SENSOR_H
+#pragma once
 
-#include "esphome/components/sensor/sensor.h"
-#include "esphome/components/i2c/i2c.h"
 #include "esphome/core/component.h"
-#include "vl53l4cx_class.h"  // Include the class from the VL53L4CX library
+#include "esphome/components/sensor/sensor.h"
+#include "vl53l4cx_class.h"  // Include the VL53L4CX sensor class
 
 namespace esphome {
 namespace vl53l4cx {
 
-class VL53L4CXSensor : public PollingComponent, public sensor::Sensor, public i2c::I2CDevice {
+class VL53L4CXSensor : public PollingComponent, public sensor::Sensor {
  public:
-  //VL53L4CXSensor() : sensor_vl53l4cx_(nullptr) {}  // Changed to pointer and initialized to nullptr
-  ~VL53L4CXSensor() { delete this->sensor_instance; }  // Added destructor to free memory
-  //VL53L4CXSensor();
-  VL53L4CXSensor() : PollingComponent(15000), sensor_instance() {}
-  VL53L4CXSensor(uint32_t update_interval);
-  void setup() override;   // Setup function for initialization
-  void update() override;  // Update function for reading sensor data
+  // Constructor
+  VL53L4CXSensor() = default;
 
- protected:
-  float get_distance();
-//  VL53L4CX* sensor_vl53l4cx_;
-  static VL53L4CX* sensor_instance;
+  // Setup function to initialize the sensor
+  void setup() override;
+
+  // Update function to fetch new distance measurements
+  void update() override;
+
+  // This will be called to set up the hardware (sensor)
+  float get_setup_priority() const override;
+
+ private:
+  static VL53L4CX *sensor_instance;  // Declare the static sensor instance
 };
 
 }  // namespace vl53l4cx
 }  // namespace esphome
-
-#endif  // ESPHOME_VL53L4CX_SENSOR_H
