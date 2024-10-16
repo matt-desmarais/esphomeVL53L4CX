@@ -31,7 +31,7 @@ void VL53L4CXSensor::setup() {
   sensor_instance->VL53L4CX_Off();
 
   // Initialize the sensor with the I2C address
-  if (sensor_instance->InitSensor(this->i2c_address_) != 0) {
+  if (sensor_instance->InitSensor(0x12) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor.");
     return;
   }
