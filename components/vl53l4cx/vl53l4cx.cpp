@@ -1,3 +1,4 @@
+
 #include "vl53l4cx.h"
 #include "esphome/core/log.h"
 #include "vl53l4cx_class.h"
@@ -9,7 +10,6 @@ static const char *TAG = "vl53l4cx";
 
 // Static instance of the VL53L4CX sensor
 VL53L4CX *VL53L4CXSensor::sensor_instance = nullptr;
-int failure_count = 0;  // Track consecutive failures
 
 void VL53L4CXSensor::setup() {
   // Force logging level to VERBOSE for all components
@@ -45,8 +45,6 @@ void VL53L4CXSensor::setup() {
   //sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_MEDIUM);  // Switch to long-range mode
   
   ESP_LOGI(TAG, "VL53L4CX setup complete.");
-  failure_count = 0;  // Reset failure count after successful setup
-
 }
 
 void VL53L4CXSensor::update() {
@@ -62,25 +60,13 @@ void VL53L4CXSensor::update() {
   // Check for new measurement data
   ESP_LOGV(TAG, "Calling VL53L4CX_GetMeasurementDataReady...");
   status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
-
-  if (status == -1) {
-  ESP_LOGE(TAG, "VL53L4CX_GetMeasurementDataReady failed with status: -1");
-
-  // Increment failure count and attempt re-setup if needed
-  failure_count++;
-  if (failure_count >= 5) {
-    ESP_LOGW(TAG, "Too many failures. Re-running setup...");
-    this->setup();  // Reinitialize the sensor
-  }
-  this->publish_state(NAN);  // Publish NaN for invalid readings
-  return;
-}
-/*  if (status != 0) {
+  
+  if (status != 0) {
     ESP_LOGE(TAG, "VL53L4CX_GetMeasurementDataReady failed with status: %d", status);
     this->publish_state(NAN);
     return;
   }
-*/  
+  
   ESP_LOGV(TAG, "Measurement Data Ready status: %d, NewDataReady: %d", status, NewDataReady);
   
   if (NewDataReady == 0) {
@@ -112,7 +98,6 @@ void VL53L4CXSensor::update() {
       }
     }
     ESP_LOGI(TAG, "Shortest Distance: %d mm", shortest_distance);
-    failure_count = 0;
     this->publish_state(shortest_distance);
   } else {
     ESP_LOGW(TAG, "No objects found or failed to retrieve ranging data.");
@@ -237,4 +222,3 @@ float VL53L4CXSensor::get_setup_priority() const {
 
 }  // namespace vl53l4cx
 }  // namespace esphome
-
