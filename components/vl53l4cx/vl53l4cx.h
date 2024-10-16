@@ -14,7 +14,7 @@ class VL53L4CXSensor : public PollingComponent, public sensor::Sensor, public i2
   //VL53L4CXSensor() : sensor_vl53l4cx_(nullptr) {}  // Changed to pointer and initialized to nullptr
   ~VL53L4CXSensor() { delete this->sensor_vl53l4cx_; }  // Added destructor to free memory
   VL53L4CXSensor();
-  //VL53L4CXSensor() : PollingComponent(15000), sensor_vl53l4cx_(nullptr) {}
+  VL53L4CXSensor() : PollingComponent(15000), sensor_vl53l4cx_() {}
   VL53L4CXSensor(uint32_t update_interval);
   void setup() override;   // Setup function for initialization
   void update() override;  // Update function for reading sensor data
