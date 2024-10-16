@@ -1,6 +1,6 @@
 #include "vl53l4cx.h"
 #include "esphome/core/log.h"
-#include "vl53l4cx_class.h"  // Ensure VL53L4CX class is included
+#include "vl53l4cx_class.h"
 
 namespace esphome {
 namespace vl53l4cx {
@@ -16,22 +16,39 @@ void VL53L4CXSensor::setup() {
 
   ESP_LOGI(TAG, "Log level set to VERBOSE");
 
-  // Start the I2C communication using the specified I2C bus
-  this->i2c_bus_->begin();
+  // Get the I2C bus using the i2c::I2CDevice object
+  auto *i2c_device = dynamic_cast<i2c::I2CDevice *>(this->i2c_bus_);
+  if (!i2c_device) {
+    ESP_LOGE(TAG, "I2C bus not initialized correctly!");
+    return;
+  }
+
+  // Get the underlying TwoWire object from the I2C device
+  TwoWire *wire = i2c_device->get_i2c_bus();
 
   // Initialize the static VL53L4CX sensor instance
   if (!sensor_instance) {
-    sensor_instance = new VL53L4CX(this->i2c_bus_, A1);  // Change A1 to your shutdown pin if needed
+    sensor_instance = new VL53L4CX(wire, A1);  // A1 is the shutdown pin
   }
 
-  // Ensure the sensor starts correctly
-  if (sensor_instance->InitSensor(this->i2c_address_) != 0) {  // Use the configured I2C address
+  // Initialize I2C bus
+  wire->begin();
+
+  // Begin sensor
+  sensor_instance->begin();
+
+  // Turn off the sensor initially
+  sensor_instance->VL53L4CX_Off();
+
+  // Initialize the sensor with the I2C address
+  if (sensor_instance->InitSensor(this->i2c_address_) != 0) {
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor.");
     return;
   }
 
   // Start continuous measurements
   sensor_instance->VL53L4CX_StartMeasurement();
+
   ESP_LOGI(TAG, "VL53L4CX setup complete.");
 }
 
