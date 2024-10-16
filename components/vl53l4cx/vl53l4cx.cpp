@@ -16,16 +16,16 @@ void VL53L4CXSensor::setup() {
 
   ESP_LOGI(TAG, "Log level set to VERBOSE");
 
-  // Start the I2C communication
-  Wire.begin();
+  // Start the I2C communication using the specified I2C bus
+  this->i2c_bus_->begin();
 
   // Initialize the static VL53L4CX sensor instance
   if (!sensor_instance) {
-    sensor_instance = new VL53L4CX(&Wire, A1);  // Change A1 to your shutdown pin if needed
+    sensor_instance = new VL53L4CX(this->i2c_bus_, A1);  // Change A1 to your shutdown pin if needed
   }
 
   // Ensure the sensor starts correctly
-  if (sensor_instance->InitSensor(0x12) != 0) {  // Set the I2C address, change as needed
+  if (sensor_instance->InitSensor(this->i2c_address_) != 0) {  // Use the configured I2C address
     ESP_LOGE(TAG, "Failed to initialize VL53L4CX sensor.");
     return;
   }
