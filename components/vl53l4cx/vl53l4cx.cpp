@@ -15,7 +15,8 @@ void VL53L4CXSensor::setup() {
   esp_log_level_set("*", ESP_LOG_VERBOSE);
 
   ESP_LOGI(TAG, "Log level set to VERBOSE");
-
+  ESP_LOGI("vl53l4cx", "Forced log: Entering setup...");
+  
   // Initialize the static VL53L4CX sensor instance using the ESPHome I2C bus
   if (!sensor_instance) {
     sensor_instance = new VL53L4CX(&Wire, A1);  // A1 is the shutdown pin
