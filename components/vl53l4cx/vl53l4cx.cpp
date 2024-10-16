@@ -89,6 +89,7 @@ void VL53L4CXSensor::update() {
   }
 }*/
 void VL53L4CXSensor::update() {
+  publish_state(42.0);
   VL53L4CX_MultiRangingData_t MultiRangingData;
   VL53L4CX_MultiRangingData_t *pMultiRangingData = &MultiRangingData;
   uint8_t NewDataReady = 0;
