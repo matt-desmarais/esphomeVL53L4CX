@@ -57,12 +57,12 @@ void VL53L4CXSensor::update() {
   int shortest_distance = INT_MAX;
 
   // Check for new measurement data with timeout
-  do {
-    status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
-    retries--;
-    delay(1);  // Small delay to avoid blocking the main loop
-  } while (!NewDataReady && retries > 0);
-
+//  do {
+//    status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
+//    retries--;
+//    delay(1);  // Small delay to avoid blocking the main loop
+//  } while (!NewDataReady && retries > 0);
+  status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
   if ((!status) && (NewDataReady != 0)) {
     // Get ranging data
     status = sensor_instance->VL53L4CX_GetMultiRangingData(pMultiRangingData);
