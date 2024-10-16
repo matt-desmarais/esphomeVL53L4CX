@@ -18,7 +18,7 @@ CONFIG_SCHEMA = (
         icon=ICON_RULER,
         accuracy_decimals=1,
     )
-    .extend(cv.polling_component_schema("5s"))  # Poll every 5 seconds by default
+    .extend(cv.polling_component_schema("100ms"))  # Poll every 5 seconds by default
     .extend(i2c.i2c_device_schema(0x29))  # Default I2C address of VL53L4CX is 0x29
 )
 
