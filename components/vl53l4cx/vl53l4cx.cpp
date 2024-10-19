@@ -26,7 +26,8 @@ void VL53L4CXSensor::setup() {
   Wire.begin();  // Use the standard Wire object
   // Set I2C timeout to 500 milliseconds
   Wire.setTimeout(500);
-  Wire.setClock(50000);  // 50 kHz
+//  Wire.setClock(50000);  // 50 kHz
+  Wire.setClock(1000000); 
   // Begin sensor
   sensor_instance->begin();
 
