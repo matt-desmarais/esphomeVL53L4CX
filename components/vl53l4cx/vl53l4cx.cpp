@@ -94,6 +94,12 @@ void VL53L4CXSensor::update() {
       int distance = pMultiRangingData->RangeData[i].RangeMilliMeter;
       ESP_LOGI(TAG, "Object %d: Distance: %d mm", i, distance);
 
+    // Ignore invalid negative values
+    if (distance < 0) {
+      ESP_LOGW(TAG, "Object %d: Invalid negative distance: %d mm", i, distance);
+      continue;
+    }
+      
       // Update the shortest distance
       if (distance > 0 && distance < 8000 && distance < shortest_distance) {
         shortest_distance = distance;
