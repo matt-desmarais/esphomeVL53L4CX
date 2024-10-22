@@ -46,7 +46,7 @@ void VL53L4CXSensor::setup() {
   //sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(200000);  // Set timing budget to 100ms
   // Set the timing budget (in microseconds)
   sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50ms timing budget
-  sensor_instance->VL53L4CX_SetInterMeasurementPeriodMilliSeconds(55);  // Set to 55ms
+  //sensor_instance->VL53L4CX_SetInterMeasurementPeriodMilliSeconds(55);  // Set to 55ms
 
   sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_MEDIUM);  // Switch to long-range mode
 
