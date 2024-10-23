@@ -48,7 +48,7 @@ void VL53L4CXSensor::setup() {
   //sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(50000);  // 50ms timing budget
   //sensor_instance->VL53L4CX_SetInterMeasurementPeriodMilliSeconds(55);  // Set to 55ms
   float xtalk_compensation = 0.3;  // Adjust based on testing (units in kcps)
-  status = sensor_instance->VL53L4CX_SetXTalkCompensationEnable(xtalk_compensation);
+  int status = sensor_instance->VL53L4CX_SetXTalkCompensationEnable(xtalk_compensation);
   if (status != 0) {
     ESP_LOGE(TAG, "Failed to set VL53L4CX sensor cross-talk compensation. Status: %d", status);
   } else {
