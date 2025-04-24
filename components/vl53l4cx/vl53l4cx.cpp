@@ -76,7 +76,6 @@ void VL53L4CXSensor::update() {
   VL53L4CX_MultiRangingData_t *pMultiRangingData = &MultiRangingData;
   uint8_t NewDataReady = 0;
   int status;
-  int retries = 100;  // Adjust retries to avoid long blocking
   int shortest_distance = INT_MAX;
 
   // Check for new measurement data
@@ -88,8 +87,6 @@ void VL53L4CXSensor::update() {
     this->publish_state(NAN);
     return;
   }
-
-  ESP_LOGV(TAG, "Measurement Data Ready status: %d, NewDataReady: %d", status, NewDataReady);
 
   if (NewDataReady == 0) {
     ESP_LOGW(TAG, "No new data available.");
@@ -107,28 +104,34 @@ void VL53L4CXSensor::update() {
     return;
   }
 
-  ESP_LOGV(TAG, "Ranging data retrieved successfully. Number of objects found: %d", pMultiRangingData->NumberOfObjectsFound);
+  ESP_LOGV(TAG, "Ranging data retrieved. Objects found: %d", pMultiRangingData->NumberOfObjectsFound);
 
-  if (pMultiRangingData->NumberOfObjectsFound > 0) {
-    for (int i = 0; i < pMultiRangingData->NumberOfObjectsFound; i++) {
-      int distance = pMultiRangingData->RangeData[i].RangeMilliMeter;
-      ESP_LOGI(TAG, "Object %d: Distance: %d mm", i, distance);
+  bool valid_distance_found = false;
 
-    // Ignore invalid negative values
-    if (distance < 0) {
-      ESP_LOGW(TAG, "Object %d: Invalid negative distance: %d mm", i, distance);
+  for (int i = 0; i < pMultiRangingData->NumberOfObjectsFound; i++) {
+    auto &data = pMultiRangingData->RangeData[i];
+    float signal = (float)data.SignalRateRtnMegaCps / 65536.0;
+    float ambient = (float)data.AmbientRateRtnMegaCps / 65536.0;
+
+    ESP_LOGI(TAG, "Object %d: Distance=%d mm | Signal=%.2f Mcps | Ambient=%.2f Mcps | Status=%d",
+             i, data.RangeMilliMeter, signal, ambient, data.RangeStatus);
+
+    if (data.RangeMilliMeter <= 0 || data.RangeMilliMeter > 4000 || signal < 0.05 || data.RangeStatus != 0) {
+      ESP_LOGW(TAG, "Object %d rejected due to invalid distance or low signal/status.", i);
       continue;
     }
-      
-      // Update the shortest distance
-      if (distance > 0 && distance < 8000 && distance < shortest_distance) {
-        shortest_distance = distance;
-      }
+
+    if (data.RangeMilliMeter < shortest_distance) {
+      shortest_distance = data.RangeMilliMeter;
+      valid_distance_found = true;
     }
-    ESP_LOGI(TAG, "Shortest Distance: %d mm", shortest_distance);
+  }
+
+  if (valid_distance_found) {
+    ESP_LOGI(TAG, "Shortest valid distance: %d mm", shortest_distance);
     this->publish_state(shortest_distance);
   } else {
-    ESP_LOGW(TAG, "No objects found or failed to retrieve ranging data.");
+    ESP_LOGW(TAG, "No valid ranging data found.");
     this->publish_state(NAN);
   }
 
@@ -142,6 +145,7 @@ void VL53L4CXSensor::update() {
     ESP_LOGV(TAG, "Measurement restarted successfully.");
   }
 }
+
 
 
 /*
