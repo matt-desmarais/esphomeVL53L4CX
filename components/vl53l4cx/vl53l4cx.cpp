@@ -105,7 +105,8 @@ void VL53L4CXSensor::update() {
     // Accept if distance is valid and signal is good, even with minor errors
     if ((data.RangeStatus == 0 || (data.RangeStatus == 4 && signal > 0.10)) &&
         data.RangeMilliMeter > 0 && data.RangeMilliMeter < 4000) {
-      shortest_distance = std::min(shortest_distance, data.RangeMilliMeter);
+      shortest_distance = std::min(shortest_distance, static_cast<int>(data.RangeMilliMeter));
+      //shortest_distance = std::min(shortest_distance, data.RangeMilliMeter);
     }
   }
 
