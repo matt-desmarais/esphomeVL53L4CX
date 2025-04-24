@@ -47,10 +47,10 @@ void VL53L4CXSensor::setup() {
   //sensor_instance->VL53L4CX_set_inter_measurement_period_ms(100);     // Must be > timing budget/1000
   ////sensor_instance->VL53L4CX_SetInterMeasurementPeriodMs(100);
 
-  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);           // Long mode
-  sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(66000);         // 66 ms is max for ESPHome loop
-  sensor_instance->VL53L4CX_SetInterMeasurementPeriodMs(70);                       // >66ms
-  sensor_instance->VL53L4CX_SetXTalkCompensationEnable(0);  // Disable cross-talk for testing
+  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_SHORT);
+  sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(30000);
+  sensor_instance->VL53L4CX_SetInterMeasurementPeriodMs(35);
+
 
   //sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(250000);  // Set timing budget to 100ms
   // Set the timing budget (in microseconds)
