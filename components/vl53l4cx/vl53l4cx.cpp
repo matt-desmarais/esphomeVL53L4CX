@@ -78,35 +78,21 @@ void VL53L4CXSensor::update() {
   int status;
   int shortest_distance = INT_MAX;
 
-  // Check for new measurement data
-  ESP_LOGV(TAG, "Calling VL53L4CX_GetMeasurementDataReady...");
   status = sensor_instance->VL53L4CX_GetMeasurementDataReady(&NewDataReady);
-
-  if (status != 0) {
-    ESP_LOGE(TAG, "VL53L4CX_GetMeasurementDataReady failed with status: %d", status);
+  if (status != 0 || NewDataReady == 0) {
+    ESP_LOGW(TAG, "No new data or failed data ready check: status=%d", status);
     this->publish_state(NAN);
     return;
   }
 
-  if (NewDataReady == 0) {
-    ESP_LOGW(TAG, "No new data available.");
-    this->publish_state(NAN);
-    return;
-  }
-
-  // Get ranging data
-  ESP_LOGV(TAG, "Calling VL53L4CX_GetMultiRangingData...");
   status = sensor_instance->VL53L4CX_GetMultiRangingData(pMultiRangingData);
-
   if (status != 0) {
-    ESP_LOGE(TAG, "VL53L4CX_GetMultiRangingData failed with status: %d", status);
+    ESP_LOGE(TAG, "GetMultiRangingData failed with status: %d", status);
     this->publish_state(NAN);
     return;
   }
 
-  ESP_LOGV(TAG, "Ranging data retrieved. Objects found: %d", pMultiRangingData->NumberOfObjectsFound);
-
-  bool valid_distance_found = false;
+  ESP_LOGV(TAG, "Objects found: %d", pMultiRangingData->NumberOfObjectsFound);
 
   for (int i = 0; i < pMultiRangingData->NumberOfObjectsFound; i++) {
     auto &data = pMultiRangingData->RangeData[i];
@@ -116,35 +102,27 @@ void VL53L4CXSensor::update() {
     ESP_LOGI(TAG, "Object %d: Distance=%d mm | Signal=%.2f Mcps | Ambient=%.2f Mcps | Status=%d",
              i, data.RangeMilliMeter, signal, ambient, data.RangeStatus);
 
-    if (data.RangeMilliMeter <= 0 || data.RangeMilliMeter > 4000 || signal < 0.05 || data.RangeStatus != 0) {
-      ESP_LOGW(TAG, "Object %d rejected due to invalid distance or low signal/status.", i);
-      continue;
-    }
-
-    if (data.RangeMilliMeter < shortest_distance) {
-      shortest_distance = data.RangeMilliMeter;
-      valid_distance_found = true;
+    // Accept if distance is valid and signal is good, even with minor errors
+    if ((data.RangeStatus == 0 || (data.RangeStatus == 4 && signal > 0.10)) &&
+        data.RangeMilliMeter > 0 && data.RangeMilliMeter < 4000) {
+      shortest_distance = std::min(shortest_distance, data.RangeMilliMeter);
     }
   }
 
-  if (valid_distance_found) {
-    ESP_LOGI(TAG, "Shortest valid distance: %d mm", shortest_distance);
+  if (shortest_distance != INT_MAX) {
     this->publish_state(shortest_distance);
+    ESP_LOGI(TAG, "Publishing shortest valid distance: %d mm", shortest_distance);
   } else {
     ESP_LOGW(TAG, "No valid ranging data found.");
     this->publish_state(NAN);
   }
 
-  // Clear interrupts and restart the measurement
-  ESP_LOGV(TAG, "Clearing interrupts and starting a new measurement...");
   status = sensor_instance->VL53L4CX_ClearInterruptAndStartMeasurement();
-
   if (status != 0) {
-    ESP_LOGE(TAG, "VL53L4CX_ClearInterruptAndStartMeasurement failed with status: %d", status);
-  } else {
-    ESP_LOGV(TAG, "Measurement restarted successfully.");
+    ESP_LOGE(TAG, "Restart measurement failed: %d", status);
   }
 }
+
 
 
 
