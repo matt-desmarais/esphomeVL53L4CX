@@ -22,6 +22,10 @@
 
 /* Write and read functions from I2C */
 
+VL53L4CX_Error VL53L4CX::VL53L4CX_SetInterMeasurementPeriodMs(uint32_t period_ms) {
+  return VL53L4CX_set_inter_measurement_period_ms(this->Dev, period_ms);
+}
+
 VL53L4CX_Error VL53L4CX::VL53L4CX_WriteMulti(VL53L4CX_DEV Dev, uint16_t index, uint8_t *pdata, uint32_t count)
 {
   int  status;
