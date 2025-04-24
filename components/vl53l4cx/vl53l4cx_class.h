@@ -56,7 +56,7 @@
 #define VL53L4CX_D_006  0x7FFFFFFFFFFFFFFF
 #define VL53L4CX_D_011  0xFFFFFFFFFFFFFFFF
 
-VL53L4CX_Error VL53L4CX_SetInterMeasurementPeriodMs(uint32_t period_ms);
+//VL53L4CX_Error VL53L4CX_SetInterMeasurementPeriodMs(uint32_t period_ms);
 /* Classes -------------------------------------------------------------------*/
 /** Class representing a VL53L4CX sensor component
  */
@@ -992,6 +992,7 @@ class VL53L4CX {
       VL53L4CX_OffsetCalibrationMode   offset_cor_mode);
 
 
+    VL53L4CX_Error VL53L4CX_SetInterMeasurementPeriodMs(uint32_t period_ms);
 
 
     VL53L4CX_Error VL53L4CX_get_offset_correction_mode(
