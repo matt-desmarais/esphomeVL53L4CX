@@ -48,7 +48,8 @@ void VL53L4CXSensor::setup() {
   ////sensor_instance->VL53L4CX_SetInterMeasurementPeriodMs(100);
 
 //  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_SHORT);
-  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);
+//  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_LONG);
+  sensor_instance->VL53L4CX_SetDistanceMode(VL53L4CX_DISTANCEMODE_MEDIUM);
   sensor_instance->VL53L4CX_SetMeasurementTimingBudgetMicroSeconds(250000);
   sensor_instance->VL53L4CX_SetInterMeasurementPeriodMs(35);
 
