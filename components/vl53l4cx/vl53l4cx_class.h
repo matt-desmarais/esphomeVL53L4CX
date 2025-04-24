@@ -63,6 +63,8 @@
 
 class VL53L4CX {
   public:
+    VL53L4CX_Error VL53L4CX_SetInterMeasurementPeriodMs(uint32_t period_ms);
+ 
     /** Constructor
      * @param[in] i2c device I2C to be used for communication
      * @param[in] xshut_pin shutdown pin to be used as component XSHUT
@@ -991,8 +993,6 @@ class VL53L4CX {
       VL53L4CX_DEV                     Dev,
       VL53L4CX_OffsetCalibrationMode   offset_cor_mode);
 
-
-    VL53L4CX_Error VL53L4CX_SetInterMeasurementPeriodMs(uint32_t period_ms);
 
 
     VL53L4CX_Error VL53L4CX_get_offset_correction_mode(
